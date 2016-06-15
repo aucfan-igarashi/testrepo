@@ -1,0 +1,28 @@
+Vagrant.configure(2) do |config|
+  config.vm.box = "bento/centos-6.7"
+
+  config.vm.define :svr01 do |server|
+    ### determined specific IP.
+    server.vm.network "private_network", ip: "192.168.33.131"
+    ### vbox name
+    server.vm.hostname = 'svr01'
+  end
+
+  config.vm.provider "virtualbox" do |vb|
+    ### vagrant hostname 
+    vb.name = "try-fuelphp"
+    vb.customize ['modifyvm', :id,"--memory", 512]
+    vb.customize ['modifyvm', :id,"--natdnshostresolver1", "on"]
+    vb.customize ['modifyvm', :id,"--natdnsproxy1", "on"]
+  end  
+ 
+  ### settitng of synced_folder
+  config.vm.synced_folder "../", "/srv/www, \
+    :create => true, \
+    :owner  => 'root', \
+    :group  => 'root', \
+    :mount_options => ['dmode=755,fmode=644'] 
+
+  # config.vm.provision :shell, :path => "ssh/init.sh"
+
+end
